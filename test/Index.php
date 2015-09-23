@@ -7,7 +7,7 @@
  * distributed with this package.
  */
  
-class Eden_Registry_Tests_Registry_ModelTest extends \PHPUnit_Framework_TestCase
+class EdenRegistryIndexTest extends PHPUnit_Framework_TestCase
 {
     public function testSet() 
     {

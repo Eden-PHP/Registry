@@ -13,11 +13,9 @@
     ],
     "require": {
         "php": ">=5.3.1",
-		"eden/core": "1.*",
-		"eden/type": "1.*"
+		"eden/array": "4.x-dev"
     },
     "autoload": {
-         "psr-0": { "Eden\\Registry\\": "" }
-    },
-	"target-dir": "Eden/Registry"
+         "psr-4": { "Eden\\Registry\\": "/src" }
+    }
 }

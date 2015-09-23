@@ -9,8 +9,6 @@
 
 namespace Eden\Registry;
 
-use Eden\Type\ArrayType;
-
 
 /**
  * This class allows the reference of a global registry. This
@@ -21,10 +19,10 @@ use Eden\Type\ArrayType;
  * pathing. 
  *
  * @vendor Eden
- * @package Registry
+ * @package registry
  * @author Christian Blanquera cblanquera@openovate.com
  */
-class Base extends ArrayType
+class Index extends Base
 {
 	/**
 	 * Construct - load data
