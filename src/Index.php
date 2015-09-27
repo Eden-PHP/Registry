@@ -67,37 +67,43 @@ class Index extends Base
 	 */
 	public function get($modified = true)
 	{
+		//get args
 		$args = func_get_args();
 		
+		//if no args
 		if(count($args) == 0) {
-			return $this;
+			//just return the array
+			return $this->getArray();
 		}
 		
+		//shift out the key
 		$key = array_shift($args);
 		
-		if($key === false) {
-			if(count($args) == 0) {
-				return $this->getArray();
+		//if there is no key in our data
+		if(!isset($this->data[$key])) {
+			//return null
+			return null;
+		}
+		
+		//if our args are now empty
+		if(count($args) == 0) {
+			//if data key is a registry
+			if($this->data[$key] instanceof Base) {
+				//just return the array
+				return $this->data[$key]->getArray();
 			}
 			
-			$modified = $key;
-			$key = array_shift($args);
-			array_unshift($args, $modified);
-		}
-		
-		if(!isset($this->data[$key])) {
-			return NULL;
-		}
-		
-		if(count($args) == 0) {
+			//return the data key
 			return $this->data[$key];
 		}
 		
+		//there are still arguments
 		if($this->data[$key] instanceof Base) {
+			//traverse
 			return call_user_func_array(array($this->data[$key], __FUNCTION__), $args);
 		}
 		
-		return NULL;
+		return null;
 	}
 	
 	/**
@@ -159,7 +165,7 @@ class Index extends Base
 	public function offsetGet($offset)
 	{
         if(!isset($this->data[$offset])) {
-			return NULL;
+			return null;
 		}
 		
 		if($this->data[$offset] instanceof Base) {

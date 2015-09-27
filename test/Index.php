@@ -32,7 +32,7 @@ class EdenRegistryIndexTest extends PHPUnit_Framework_TestCase
 		
 		$this->assertEquals(456, $value2);
 		
-		$this->assertEquals('{"value1":123,"value2":456}', trim($value3));
+		$this->assertTrue(is_array($value3));
 		
 		$registry['name'] = 'value';
 		
