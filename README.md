@@ -1,3 +1,5 @@
+[![Build Status](https://api.travis-ci.org/Eden-PHP/Registry.png)](https://travis-ci.org/Eden-PHP/Registry)
+===
 # Registry
 
 One annoyance when dealing with configuration classes is that there can be many which holds a small part of all the actual data you need to build a web page. Gathering that data can be a real pain and if not stored in a public variable, impossible to access. *Eden's* registry out weighs the benefits of a normal configuration class because of its ability to organize data and access data by their unique key or access datasets by their common key. When we think about *Eden's* registry we can imagine a file system, where if you choose a folder you will get a list of files and when you choose a file given its folder path and name you will get the exact value. `Figure 1` below shows how we set data in the registry.
