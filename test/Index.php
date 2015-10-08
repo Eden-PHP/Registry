@@ -7,7 +7,7 @@
  * distributed with this package.
  */
  
-class Eden_Registry_Tests_Registry_ModelTest extends \PHPUnit_Framework_TestCase
+class EdenRegistryIndexTest extends PHPUnit_Framework_TestCase
 {
     public function testSet() 
     {
@@ -32,7 +32,7 @@ class Eden_Registry_Tests_Registry_ModelTest extends \PHPUnit_Framework_TestCase
 		
 		$this->assertEquals(456, $value2);
 		
-		$this->assertEquals('{"value1":123,"value2":456}', trim($value3));
+		$this->assertTrue(is_array($value3));
 		
 		$registry['name'] = 'value';
 		
