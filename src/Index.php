@@ -17,9 +17,10 @@ namespace Eden\Registry;
  * in turn allows you to get a data set based on similar
  * pathing.
  *
- * @vendor Eden
- * @package registry
- * @author Christian Blanquera cblanquera@openovate.com
+ * @vendor   Eden
+ * @package  registry
+ * @author   Christian Blanquera <cblanquera@openovate.com>
+ * @standard PSR-2
  */
 class Index extends Base
 {
@@ -159,6 +160,7 @@ class Index extends Base
      * returns data using the ArrayAccess interface
      *
      * @param number
+     *
      * @return bool
      */
     public function offsetGet($offset)

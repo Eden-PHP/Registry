@@ -1,5 +1,5 @@
 <?php //-->
-/*
+/**
  * This file is part of the Eden package.
  * (c) 2014-2016 Openovate Labs
  *
@@ -12,9 +12,10 @@ namespace Eden\Registry;
 /**
  * Exception
  *
- * @vendor Eden
- * @package registry
- * @author Christian Blanquera cblanquera@openovate.com
+ * @vendor   Eden
+ * @package  registry
+ * @author   Christian Blanquera <cblanquera@openovate.com>
+ * @standard PSR-2
  */
 class Base extends \Eden_Array_Index
 {
