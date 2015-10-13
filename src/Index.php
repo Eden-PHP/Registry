@@ -210,7 +210,7 @@ class Index extends Base
      * Creates the name space given the space
      * and sets the value to that name space
      *
-     * @param scalar[, scalar..],*mixed $value The registry path; yea i know this is wierd 
+     * @param scalar[, scalar..],*mixed $value The registry path; yea i know this is wierd
      *
      * @return Eden\Registry\Index
      */
