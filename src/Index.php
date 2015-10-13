@@ -1,24 +1,19 @@
 <?php //-->
-/*
- * This file is part of the Registry package of the Eden PHP Library.
- * (c) 2013-2014 Openovate Labs
+/**
+ * This file is part of the Eden PHP Library.
+ * (c) 2014-2016 Openovate Labs
  *
- * Copyright and license information can be found at LICENSE
+ * Copyright and license information can be found at LICENSE.txt
  * distributed with this package.
  */
 
 namespace Eden\Registry;
 
 /**
- * This class allows the reference of a global registry. This
- * is a better registry in memory design. What makes this
- * registry truly unique is that it uses a pathing design
- * similar to a file/folder structure to organize data which also
- * in turn allows you to get a data set based on similar
- * pathing.
+ * Registry class implementation
  *
  * @vendor   Eden
- * @package  registry
+ * @package  Registry
  * @author   Christian Blanquera <cblanquera@openovate.com>
  * @standard PSR-2
  */
@@ -62,6 +57,8 @@ class Index extends Base
     
     /**
      * Gets a value given the path in the registry.
+     *
+     * @param scalar[, scalar..] $modified The registry path; yea i know this is wierd
      *
      * @return mixed
      */
@@ -108,6 +105,8 @@ class Index extends Base
     
     /**
      * Returns the raw array recursively
+     *
+     * @param bool $modified whether to return the original data
      *
      * @return array
      */
@@ -159,7 +158,7 @@ class Index extends Base
     /**
      * returns data using the ArrayAccess interface
      *
-     * @param number
+     * @param *scalar|null|bool $offset The key to get
      *
      * @return bool
      */
@@ -179,7 +178,7 @@ class Index extends Base
     /**
      * Removes a key and everything associated with it
      *
-     * @return Eden\Registry\Base
+     * @return Eden\Registry\Index
      */
     public function remove()
     {
@@ -211,7 +210,9 @@ class Index extends Base
      * Creates the name space given the space
      * and sets the value to that name space
      *
-     * @return Registry
+     * @param scalar[, scalar..],*mixed $value The registry path; yea i know this is wierd 
+     *
+     * @return Eden\Registry\Index
      */
     public function set($value = null)
     {
