@@ -18,7 +18,8 @@ namespace Eden\Registry;
  * @standard PSR-2
  */
 class Index extends Base
-{   
+{
+
     /**
      * Converts data to JSON format
      *
@@ -41,25 +42,25 @@ class Index extends Base
         //get args
         $args = func_get_args();
         
-		if (count($args) == 0) {
+        if (count($args) == 0) {
             return null;
         }
-		
-		$last = array_pop($args);
-		$pointer = &$this->data;
-		foreach($args as $step) {	
-			if(!isset($pointer[$step])) {
-				return null;
-			}
+        
+        $last = array_pop($args);
+        $pointer = &$this->data;
+        foreach ($args as $step) {
+            if (!isset($pointer[$step])) {
+                return null;
+            }
 
-			$pointer = &$pointer[$step];
-		}
-		
-		if(!isset($pointer[$last])) {
-			return null;
-		}
-		
-		return $pointer[$last];
+            $pointer = &$pointer[$step];
+        }
+        
+        if (!isset($pointer[$last])) {
+            return null;
+        }
+        
+        return $pointer[$last];
     }
     
     /**
@@ -84,15 +85,15 @@ class Index extends Base
      */
     public function getDot($notation, $separator = '.')
     {
-		Argument::i()
-			//argument 1 must be a string
-			->test(1, 'string')
-			//argument 2 must be a string
-			->test(2, 'string');
+        Argument::i()
+            //argument 1 must be a string
+            ->test(1, 'string')
+            //argument 2 must be a string
+            ->test(2, 'string');
 
         $args = explode($separator, $notation);
-		
-		return call_user_func_array(array($this, 'get'), $args);
+        
+        return call_user_func_array(array($this, 'get'), $args);
     }
     
     /**
@@ -105,15 +106,15 @@ class Index extends Base
      */
     public function isDot($notation, $separator = '.')
     {
-		Argument::i()
-			//argument 1 must be a string
-			->test(1, 'string')
-			//argument 2 must be a string
-			->test(2, 'string');
+        Argument::i()
+            //argument 1 must be a string
+            ->test(1, 'string')
+            //argument 2 must be a string
+            ->test(2, 'string');
 
         $args = explode($separator, $notation);
-		
-		return call_user_func_array(array($this, 'isKey'), $args);
+        
+        return call_user_func_array(array($this, 'isKey'), $args);
     }
     
     /**
@@ -131,22 +132,22 @@ class Index extends Base
         
         $last = array_pop($args);
         
-		$pointer = &$this->data;
-		foreach($args as $i => $step) {	
-			if(!isset($pointer[$step]) 
-				|| !is_array($pointer[$step])
-			) {
-				return false;
-			}
+        $pointer = &$this->data;
+        foreach ($args as $i => $step) {
+            if (!isset($pointer[$step])
+                || !is_array($pointer[$step])
+            ) {
+                return false;
+            }
 
-			$pointer = &$pointer[$step];
-		}
-		
-		if(!isset($pointer[$last])) {
-			return false;
-		}
-		
-		return true;
+            $pointer = &$pointer[$step];
+        }
+        
+        if (!isset($pointer[$last])) {
+            return false;
+        }
+        
+        return true;
     }
     
     /**
@@ -164,18 +165,18 @@ class Index extends Base
         
         $last = array_pop($args);
         
-		$pointer = &$this->data;
-		foreach($args as $i => $step) {	
-			if(!isset($pointer[$step]) 
-				|| !is_array($pointer[$step])
-			) {
-				return $this;
-			}
+        $pointer = &$this->data;
+        foreach ($args as $i => $step) {
+            if (!isset($pointer[$step])
+                || !is_array($pointer[$step])
+            ) {
+                return $this;
+            }
 
-			$pointer = &$pointer[$step];
-		}
-		
-		unset($pointer[$last]);
+            $pointer = &$pointer[$step];
+        }
+        
+        unset($pointer[$last]);
         
         return $this;
     }
@@ -192,26 +193,26 @@ class Index extends Base
     {
         //get args
         $args = func_get_args();
-		
-		if(count($args) < 2) {
-			return $this;
-		}
-		
-		$value = array_pop($args);
-		$last = array_pop($args);
         
-		$pointer = &$this->data;
-		foreach($args as $i => $step) {	
-			if(!isset($pointer[$step]) 
-				|| !is_array($pointer[$step])
-			) {
-				$pointer[$step] = array();
-			}
+        if (count($args) < 2) {
+            return $this;
+        }
+        
+        $value = array_pop($args);
+        $last = array_pop($args);
+        
+        $pointer = &$this->data;
+        foreach ($args as $i => $step) {
+            if (!isset($pointer[$step])
+                || !is_array($pointer[$step])
+            ) {
+                $pointer[$step] = array();
+            }
 
-			$pointer = &$pointer[$step];
-		}
-		
-		$pointer[$last] = $value;
+            $pointer = &$pointer[$step];
+        }
+        
+        $pointer[$last] = $value;
         
         return $this;
     }
@@ -228,16 +229,16 @@ class Index extends Base
      */
     public function setDot($notation, $value, $separator = '.')
     {
-		Argument::i()
-			//argument 1 must be a string
-			->test(1, 'string')
-			//argument 3 must be a string
-			->test(3, 'string');
+        Argument::i()
+            //argument 1 must be a string
+            ->test(1, 'string')
+            //argument 3 must be a string
+            ->test(3, 'string');
 
         $args = explode($separator, $notation);
-		
-		$args[] = $value;
-		
-		return call_user_func_array(array($this, 'set'), $args);
+        
+        $args[] = $value;
+        
+        return call_user_func_array(array($this, 'set'), $args);
     }
 }
