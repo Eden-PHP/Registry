@@ -19,32 +19,7 @@ namespace Eden\Registry;
  */
 class Index extends Base
 {
-    /**
-     * Construct - load data
-     *
-     * @param array
-     */
-    public function __construct($data = array())
-    {
-        //if there is more arguments or data is not an array
-        if (func_num_args() > 1 || !is_array($data)) {
-            //just get the args
-            $data = func_get_args();
-        }
-        
-        foreach ($data as $key => $value) {
-            if (!is_array($value)) {
-                continue;
-            }
-            
-            $class = get_class($this);
-            
-            $data[$key] = $this->$class($value);
-        }
-        
-        parent::__construct($data);
-    }
-    
+
     /**
      * Converts data to JSON format
      *
@@ -67,40 +42,25 @@ class Index extends Base
         //get args
         $args = func_get_args();
         
-        //if no args
         if (count($args) == 0) {
-            //just return the array
-            return $this->getArray();
-        }
-        
-        //shift out the key
-        $key = array_shift($args);
-        
-        //if there is no key in our data
-        if (!isset($this->data[$key])) {
-            //return null
             return null;
         }
         
-        //if our args are now empty
-        if (count($args) == 0) {
-            //if data key is a registry
-            if ($this->data[$key] instanceof Base) {
-                //just return the array
-                return $this->data[$key]->getArray();
+        $last = array_pop($args);
+        $pointer = &$this->data;
+        foreach ($args as $step) {
+            if (!isset($pointer[$step])) {
+                return null;
             }
-            
-            //return the data key
-            return $this->data[$key];
+
+            $pointer = &$pointer[$step];
         }
         
-        //there are still arguments
-        if ($this->data[$key] instanceof Base) {
-            //traverse
-            return call_user_func_array(array($this->data[$key], __FUNCTION__), $args);
+        if (!isset($pointer[$last])) {
+            return null;
         }
         
-        return null;
+        return $pointer[$last];
     }
     
     /**
@@ -112,17 +72,49 @@ class Index extends Base
      */
     public function getArray($modified = true)
     {
-        $array = array();
-        foreach ($this->data as $key => $data) {
-            if ($data instanceof Base) {
-                $array[$key] = $data->getArray($modified);
-                continue;
-            }
-            
-            $array[$key] = $data;
-        }
+        return $this->data;
+    }
+    
+    /**
+     * Gets a value given the path in the registry.
+     *
+     * @param *string $notation  Name space string notation
+     * @param string  $separator If you want to specify a different separator other than dot
+     *
+     * @return mixed
+     */
+    public function getDot($notation, $separator = '.')
+    {
+        Argument::i()
+            //argument 1 must be a string
+            ->test(1, 'string')
+            //argument 2 must be a string
+            ->test(2, 'string');
+
+        $args = explode($separator, $notation);
         
-        return $array;
+        return call_user_func_array(array($this, 'get'), $args);
+    }
+    
+    /**
+     * Checks to see if a key is set
+     *
+     * @param *string $notation  Name space string notation
+     * @param string  $separator If you want to specify a different separator other than dot
+     *
+     * @return mixed
+     */
+    public function isDot($notation, $separator = '.')
+    {
+        Argument::i()
+            //argument 1 must be a string
+            ->test(1, 'string')
+            //argument 2 must be a string
+            ->test(2, 'string');
+
+        $args = explode($separator, $notation);
+        
+        return call_user_func_array(array($this, 'isKey'), $args);
     }
     
     /**
@@ -138,41 +130,24 @@ class Index extends Base
             return $this;
         }
         
-        $key = array_shift($args);
+        $last = array_pop($args);
         
-        if (!isset($this->data[$key])) {
+        $pointer = &$this->data;
+        foreach ($args as $i => $step) {
+            if (!isset($pointer[$step])
+                || !is_array($pointer[$step])
+            ) {
+                return false;
+            }
+
+            $pointer = &$pointer[$step];
+        }
+        
+        if (!isset($pointer[$last])) {
             return false;
         }
         
-        if (count($args) == 0) {
-            return true;
-        }
-        
-        if ($this->data[$key] instanceof Base) {
-            return call_user_func_array(array($this->data[$key], __FUNCTION__), $args);
-        }
-        
-        return false;
-    }
-    
-    /**
-     * returns data using the ArrayAccess interface
-     *
-     * @param *scalar|null|bool $offset The key to get
-     *
-     * @return bool
-     */
-    public function offsetGet($offset)
-    {
-        if (!isset($this->data[$offset])) {
-            return null;
-        }
-        
-        if ($this->data[$offset] instanceof Base) {
-            return $this->data[$offset]->getArray();
-        }
-        
-        return $this->data[$offset];
+        return true;
     }
     
     /**
@@ -188,20 +163,20 @@ class Index extends Base
             return $this;
         }
         
-        $key = array_shift($args);
+        $last = array_pop($args);
         
-        if (!isset($this->data[$key])) {
-            return $this;
+        $pointer = &$this->data;
+        foreach ($args as $i => $step) {
+            if (!isset($pointer[$step])
+                || !is_array($pointer[$step])
+            ) {
+                return $this;
+            }
+
+            $pointer = &$pointer[$step];
         }
         
-        if (count($args) == 0) {
-            unset($this->data[$key]);
-            return $this;
-        }
-        
-        if ($this->data[$key] instanceof Base) {
-            return call_user_func_array(array($this->data[$key], __FUNCTION__), $args);
-        }
+        unset($pointer[$last]);
         
         return $this;
     }
@@ -216,30 +191,54 @@ class Index extends Base
      */
     public function set($value = null)
     {
+        //get args
         $args = func_get_args();
         
         if (count($args) < 2) {
             return $this;
         }
         
-        $key = array_shift($args);
+        $value = array_pop($args);
+        $last = array_pop($args);
         
-        if (count($args) == 1) {
-            if (is_array($args[0])) {
-                $args[0] = self::i($args[0]);
+        $pointer = &$this->data;
+        foreach ($args as $i => $step) {
+            if (!isset($pointer[$step])
+                || !is_array($pointer[$step])
+            ) {
+                $pointer[$step] = array();
             }
-            
-            $this->data[$key] = $args[0];
-            
-            return $this;
+
+            $pointer = &$pointer[$step];
         }
         
-        if (!isset($this->data[$key]) || !($this->data[$key] instanceof Base)) {
-            $this->data[$key] = self::i();
-        }
-        
-        call_user_func_array(array($this->data[$key], __FUNCTION__), $args);
+        $pointer[$last] = $value;
         
         return $this;
+    }
+    
+    /**
+     * Creates the name space given the space
+     * and sets the value to that name space
+     *
+     * @param *string $notation  Name space string notation
+     * @param *mixed  $value     Value to set on this namespace
+     * @param string  $separator If you want to specify a different separator other than dot
+     *
+     * @return mixed
+     */
+    public function setDot($notation, $value, $separator = '.')
+    {
+        Argument::i()
+            //argument 1 must be a string
+            ->test(1, 'string')
+            //argument 3 must be a string
+            ->test(3, 'string');
+
+        $args = explode($separator, $notation);
+        
+        $args[] = $value;
+        
+        return call_user_func_array(array($this, 'set'), $args);
     }
 }
